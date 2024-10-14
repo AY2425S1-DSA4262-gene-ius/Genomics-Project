@@ -5,6 +5,7 @@ class PositionalEncoder(nn.Module):
 
     def __init__(self, max_len=3):
         super().__init__()
+
         pe = torch.zeros(max_len)      
         position = torch.arange(start=0, end=max_len, step=1).float().unsqueeze(1)
         pe = torch.sin(position)

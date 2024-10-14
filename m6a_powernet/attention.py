@@ -1,3 +1,4 @@
+import math
 import torch
 from torch import nn
 
@@ -14,12 +15,14 @@ class SingleHeadAttention(nn.Module):
         self.output = nn.Linear(d_model, d_model)
         self.attn = None
 
+        self.scale_factor = math.sqrt(d_model)
+
     def forward(self, encoding: torch.Tensor):
         query = self.query(encoding)
         key = self.key(encoding)
         value = self.value(encoding)
 
-        scores = torch.matmul(query, key.transpose(-1, -2))
+        scores = torch.matmul(query, key.transpose(-1, -2)) / self.scale_factor
         attn = self.softmax(scores)
 
         x = torch.matmul(attn, value)

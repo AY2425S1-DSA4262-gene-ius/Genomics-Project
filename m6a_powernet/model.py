@@ -10,12 +10,16 @@ class M6APowerNet(nn.Module):
         self.signal_sd_subnet = SubNet(max_len=input_size)
         self.signal_mean_subnet = SubNet(max_len=input_size)
 
-        self.seven_mer_embedder = nn.Embedding(num_embeddings=66, embedding_dim=16)
+        self.seven_mer_embedder = nn.Embedding(num_embeddings=288, embedding_dim=16)
         self.sever_mer_layer = nn.Linear(16, 2)
 
         self.global_layer1 = nn.Linear(11, 32)
+        self.global_batch_norm1 = nn.BatchNorm1d(32)
         self.global_layer2 = nn.Linear(32, 8)
+        self.global_batch_norm2 = nn.BatchNorm1d(8)
         self.global_layer3 = nn.Linear(8, 1)
+
+        self.activation = nn.ReLU()
 
     
     def forward(self, input):
@@ -26,11 +30,15 @@ class M6APowerNet(nn.Module):
         signal_length_subnet_output = self.signal_length_subnet(signal_length)
         signal_sd_subnet_output = self.signal_sd_subnet(signal_sd)
         signal_mean_subnet_output = self.signal_mean_subnet(signal_mean)
-        seven_mer_output = self.sever_mer_layer(self.seven_mer_embedder(seven_mer))
+        seven_mer_output = self.sever_mer_layer(self.seven_mer_embedder(seven_mer)).expand(signal_length_subnet_output.shape[0], -1)
+
         combined = torch.cat((signal_length_subnet_output, signal_sd_subnet_output, signal_mean_subnet_output, seven_mer_output), dim=1)
 
-        output = self.global_layer1(combined)
-        output = self.global_layer2(output)
+        output = self.activation(self.global_batch_norm1(self.global_layer1(combined)))
+        print(output)
+        output = self.activation(self.global_batch_norm2(self.global_layer2(output)))
+        print(output)
+
         output = self.global_layer3(output)
 
-        return output
+        return torch.sigmoid(output)

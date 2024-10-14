@@ -41,6 +41,7 @@ class RNAData(Dataset):
         processed_labels = []
 
         transcripts, labels = self._read_data()
+
         for transcript in transcripts:
             transcript_name = list(transcript.keys())[0]
             position = list(transcript[transcript_name].keys())[0]
@@ -64,6 +65,15 @@ class RNAData(Dataset):
 
         for label in labels.iloc:
             processed_labels.append(torch.FloatTensor(label['label']))
+
+        # Train test split by gene_id
+        unique_gene_ids = labels['gene_id'].unique()
+        numpy.random.shuffle(unique_gene_ids)
+        split_index = int(len(unique_gene_ids) * 0.8)
+        train_gene_ids = unique_gene_ids[:split_index]
+        test_gene_ids = unique_gene_ids[split_index:]
+
+        
 
         print('RNA Sequence Dataset has been loaded.')
         return processed_transcripts, processed_labels

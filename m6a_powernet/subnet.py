@@ -19,4 +19,4 @@ class SubNet(nn.Module):
         # Residual connection
         residual_connected_output = positionally_encoded_embeddings + self_attention_output
 
-        return self.output(residual_connected_output)
+        return self.output(residual_connected_output).squeeze(2)
