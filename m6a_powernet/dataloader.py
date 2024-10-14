@@ -5,16 +5,21 @@ import pandas
 import torch
 
 from itertools import product
-from torch.utils.transcript import Dataset
+from torch.utils.data import Dataset
 
 NUCLEOTIDES = ["A", "C", "G", "T"]
-DRACH_MOTIFS = [['A', 'G', 'T'], ['G', 'A'], ['A'], ['C'], ['A', 'C', 'T']]
+DRACH_MOTIFS = [['A', 'G', 'T'],
+                ['G', 'A'],
+                ['A'],
+                ['C'],
+                ['A', 'C', 'T']]
 
 class RNAData(Dataset):
     def __init__(self, dataset_path, label_path):
         self.dataset_path = dataset_path
         self.label_path = label_path
-        self.sevenmer_mapper = {string: index for index, string in enumerate(product(NUCLEOTIDES, DRACH_MOTIFS, NUCLEOTIDES))}
+        self.sevenmer_mapper = {''.join(sevenmer): index for index, sevenmer in enumerate(product(NUCLEOTIDES, *DRACH_MOTIFS, NUCLEOTIDES))}
+        self.processed_transcripts, self.processed_labels = self.load_data()
 
     def _read_data(self):
         transcripts = []
@@ -33,6 +38,7 @@ class RNAData(Dataset):
         print('Loading the RNA Sequence Dataset...')
 
         processed_transcripts = []
+        processed_labels = []
 
         transcripts, labels = self._read_data()
         for transcript in transcripts:
@@ -48,15 +54,25 @@ class RNAData(Dataset):
 
             # From the N by 3 by 3, we split it into 3 tensors, such that each tensor stores N by 1 by 3, where each tensor is a data type.
             # Then, transpose the 1 by 3 to become 3 by 1, so that the model can use.
-            signal_lengths = torch.tensor(new[:, 0, :].transpose(0, 2, 1))
-            signal_sd = torch.tensor(new[:, 1, :].transpose(0, 2, 1))
-            signal_mean = torch.tensor(new[:, 2, :].transpose(0, 2, 1))
+            signal_lengths = torch.FloatTensor(new[:, 0:1, :].transpose(0, 2, 1))
+            signal_sd = torch.FloatTensor(new[:, 1:2, :].transpose(0, 2, 1))
+            signal_mean = torch.FloatTensor(new[:, 2:3, :].transpose(0, 2, 1))
 
             encoded_sevenmer = torch.tensor([self._encode_sevenmer(nucleotides)])
 
             processed_transcripts.append([signal_lengths, signal_sd, signal_mean, encoded_sevenmer])
 
-        self.transcripts = transcripts
-        self.labels = labels
+        for label in labels.iloc:
+            processed_labels.append(torch.FloatTensor(label['label']))
 
         print('RNA Sequence Dataset has been loaded.')
+        return processed_transcripts, processed_labels
+
+    def __len__(self):
+        return len(self.processed_transcripts)
+
+    def __getitem__(self, idx):
+        transcript_data = self.processed_transcripts[idx]
+        label = self.processed_labels[idx]
+        
+        return transcript_data, label

@@ -27,7 +27,6 @@ class M6APowerNet(nn.Module):
         signal_sd_subnet_output = self.signal_sd_subnet(signal_sd)
         signal_mean_subnet_output = self.signal_mean_subnet(signal_mean)
         seven_mer_output = self.sever_mer_layer(self.seven_mer_embedder(seven_mer))
-
         combined = torch.cat((signal_length_subnet_output, signal_sd_subnet_output, signal_mean_subnet_output, seven_mer_output), dim=1)
 
         output = self.global_layer1(combined)
