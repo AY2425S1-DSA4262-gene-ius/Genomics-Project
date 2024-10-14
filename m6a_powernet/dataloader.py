@@ -5,7 +5,7 @@ import pandas
 import torch
 
 from itertools import product
-from torch.utils.data import Dataset
+from torch.utils.data import Dataset, DataLoader, WeightedRandomSampler
 
 NUCLEOTIDES = ["A", "C", "G", "T"]
 DRACH_MOTIFS = [['A', 'G', 'T'],
@@ -19,7 +19,14 @@ class RNAData(Dataset):
         self.dataset_path = dataset_path
         self.label_path = label_path
         self.sevenmer_mapper = {''.join(sevenmer): index for index, sevenmer in enumerate(product(NUCLEOTIDES, *DRACH_MOTIFS, NUCLEOTIDES))}
-        self.processed_transcripts, self.processed_labels = self.load_data()
+        self.processed_transcripts, self.processed_labels, self.train_indices, self.test_indices = self._load_and_split_data()
+        self.train_mode = True # Default is train mode
+
+    def train_mode(self):
+        self.train_mode = True
+    
+    def test_mode(self):
+        self.train_mode = False
 
     def _read_data(self):
         transcripts = []
@@ -34,13 +41,20 @@ class RNAData(Dataset):
     def _encode_sevenmer(self, sevenmer):
         return self.sevenmer_mapper[sevenmer]
 
-    def load_data(self):
+    def _load_and_split_data(self):
         print('Loading the RNA Sequence Dataset...')
 
         processed_transcripts = []
         processed_labels = []
 
         transcripts, labels = self._read_data()
+
+        # Train test split by gene_id
+        unique_gene_ids = labels['gene_id'].unique()
+        numpy.random.shuffle(unique_gene_ids)
+        split_index = int(len(unique_gene_ids) * 0.8)
+        train_gene_ids = set(unique_gene_ids[:split_index])
+        test_gene_ids = set(unique_gene_ids[split_index:])
 
         for transcript in transcripts:
             transcript_name = list(transcript.keys())[0]
@@ -63,26 +77,45 @@ class RNAData(Dataset):
 
             processed_transcripts.append([signal_lengths, signal_sd, signal_mean, encoded_sevenmer])
 
-        for label in labels.iloc:
-            processed_labels.append(torch.FloatTensor(label['label']))
+        train_indices = []
+        test_indices = []
 
-        # Train test split by gene_id
-        unique_gene_ids = labels['gene_id'].unique()
-        numpy.random.shuffle(unique_gene_ids)
-        split_index = int(len(unique_gene_ids) * 0.8)
-        train_gene_ids = unique_gene_ids[:split_index]
-        test_gene_ids = unique_gene_ids[split_index:]
-
-        
+        for index, label in enumerate(labels.iloc):
+            processed_labels.append(torch.tensor(label['label']))
+            if label['gene_id'] in train_gene_ids:
+                train_indices.append(index)
+            elif label['gene_id'] in test_gene_ids:
+                test_indices.append(index)
+            else:
+                raise ValueError('How did you get this error? It is literally not possible.')
 
         print('RNA Sequence Dataset has been loaded.')
-        return processed_transcripts, processed_labels
+        return processed_transcripts, processed_labels, train_indices, test_indices
+
+    def data_loader(self):
+        labels_tracker = {}
+        for _, label in self:
+            int_label = int(label.item())
+            labels_tracker[int_label] = labels_tracker.get(int_label, 0) + 1
+
+        total_datapoints = sum(labels_tracker.values())
+        label_weights = {
+            label: (total_datapoints - instance_count) / total_datapoints
+            for label, instance_count in labels_tracker.items()
+        }
+
+        weights = list(map(lambda _, label: label_weights[int(label.item())], self))
+        sampler = WeightedRandomSampler(weights=weights, num_samples=len(weights), replacement=True)
+        loader = DataLoader(self, sampler=sampler, batch_size=1)
+
+        return loader
 
     def __len__(self):
-        return len(self.processed_transcripts)
+        return len(self.train_indices) if self.train_mode else len(self.test_indices)
 
     def __getitem__(self, idx):
-        transcript_data = self.processed_transcripts[idx]
-        label = self.processed_labels[idx]
+        data_index = self.train_indices[idx] if self.train_mode else self.test_indices[idx]
+        transcript_data = self.processed_transcripts[data_index]
+        label = self.processed_labels[data_index]
         
         return transcript_data, label
