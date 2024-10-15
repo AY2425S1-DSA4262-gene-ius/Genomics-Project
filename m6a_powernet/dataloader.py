@@ -15,18 +15,21 @@ DRACH_MOTIFS = [['A', 'G', 'T'],
                 ['A', 'C', 'T']]
 
 class RNAData(Dataset):
-    def __init__(self, dataset_path, label_path):
+    def __init__(self, dataset_path, label_path, seed):
         self.dataset_path = dataset_path
         self.label_path = label_path
+        self.seed = seed
         self.sevenmer_mapper = {''.join(sevenmer): index for index, sevenmer in enumerate(product(NUCLEOTIDES, *DRACH_MOTIFS, NUCLEOTIDES))}
         self.processed_transcripts, self.processed_labels, self.train_indices, self.test_indices = self._load_and_split_data()
         self.train_mode = True # Default is train mode
 
-    def train_mode(self):
+    def set_train_mode(self):
         self.train_mode = True
-    
-    def test_mode(self):
+        return self
+
+    def set_test_mode(self):
         self.train_mode = False
+        return self
 
     def _read_data(self):
         transcripts = []
@@ -51,7 +54,11 @@ class RNAData(Dataset):
 
         # Train test split by gene_id
         unique_gene_ids = labels['gene_id'].unique()
+
+        if self.seed is not None:
+            numpy.random.seed(self.seed)
         numpy.random.shuffle(unique_gene_ids)
+
         split_index = int(len(unique_gene_ids) * 0.8)
         train_gene_ids = set(unique_gene_ids[:split_index])
         test_gene_ids = set(unique_gene_ids[split_index:])
@@ -81,7 +88,7 @@ class RNAData(Dataset):
         test_indices = []
 
         for index, label in enumerate(labels.iloc):
-            processed_labels.append(torch.tensor(label['label']))
+            processed_labels.append(torch.tensor(float(label['label'])))
             if label['gene_id'] in train_gene_ids:
                 train_indices.append(index)
             elif label['gene_id'] in test_gene_ids:
@@ -93,20 +100,24 @@ class RNAData(Dataset):
         return processed_transcripts, processed_labels, train_indices, test_indices
 
     def data_loader(self):
-        labels_tracker = {}
-        for _, label in self:
-            int_label = int(label.item())
-            labels_tracker[int_label] = labels_tracker.get(int_label, 0) + 1
+        if self.train_mode:
+            labels_tracker = {}
+            
+            for _, label in self:
+                int_label = int(label.item())
+                labels_tracker[int_label] = labels_tracker.get(int_label, 0) + 1
 
-        total_datapoints = sum(labels_tracker.values())
-        label_weights = {
-            label: (total_datapoints - instance_count) / total_datapoints
-            for label, instance_count in labels_tracker.items()
-        }
+            total_datapoints = sum(labels_tracker.values())
+            label_weights = {
+                label: (3/4 / (instance_count / total_datapoints)) if label == 0 else (1/4 / (instance_count / total_datapoints))
+                for label, instance_count in labels_tracker.items()
+            }
 
-        weights = list(map(lambda _, label: label_weights[int(label.item())], self))
-        sampler = WeightedRandomSampler(weights=weights, num_samples=len(weights), replacement=True)
-        loader = DataLoader(self, sampler=sampler, batch_size=1)
+            weights = list(map(lambda item: label_weights[int(item[1].item())], self))
+            sampler = WeightedRandomSampler(weights=weights, num_samples=len(weights), replacement=True)
+            loader = DataLoader(self, sampler=sampler, batch_size=1)
+        else:
+            loader = DataLoader(self, batch_size=1)
 
         return loader
 

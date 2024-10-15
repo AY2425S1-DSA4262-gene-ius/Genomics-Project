@@ -35,10 +35,8 @@ class M6APowerNet(nn.Module):
         combined = torch.cat((signal_length_subnet_output, signal_sd_subnet_output, signal_mean_subnet_output, seven_mer_output), dim=1)
 
         output = self.activation(self.global_batch_norm1(self.global_layer1(combined)))
-        print(output)
         output = self.activation(self.global_batch_norm2(self.global_layer2(output)))
-        print(output)
-
         output = self.global_layer3(output)
 
-        return torch.sigmoid(output)
+        probabilities = torch.sigmoid(output)
+        return 1 - torch.prod(1 - probabilities)

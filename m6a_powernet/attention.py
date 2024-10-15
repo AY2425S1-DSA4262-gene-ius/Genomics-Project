@@ -12,7 +12,6 @@ class SingleHeadAttention(nn.Module):
 
         self.softmax = nn.Softmax(dim=-1)
 
-        self.output = nn.Linear(d_model, d_model)
         self.attn = None
 
         self.scale_factor = math.sqrt(d_model)
@@ -29,4 +28,4 @@ class SingleHeadAttention(nn.Module):
 
         self.attn = attn.detach()
 
-        return self.output(x)
+        return x
