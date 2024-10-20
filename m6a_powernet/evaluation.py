@@ -1,5 +1,6 @@
 import argparse
 import torch
+import torch.nn as nn
 
 from sklearn.metrics import (
     precision_score,
@@ -27,6 +28,7 @@ def parse_arguments() -> argparse.Namespace:
 
     return args
 
+# python -m m6a_powernet.evaluation --dataset_path data/dataset0.json.gz --labels_path data/data.info.labelled --checkpoint_directory m6a_powernet/checkpoints/m6a_powernet_model_epoch1.pth
 def start(args: argparse.Namespace):
     model = M6APowerNet()
     model.load_state_dict(torch.load(args.checkpoint_directory))
@@ -39,13 +41,13 @@ def start(args: argparse.Namespace):
     test_dataloader = dataset.set_test_mode().data_loader()
 
     # Evaluation
-    data_evaluated = 0
+    # data_evaluated = 0
     outputs = []
     labels = []
     for inputs, label in test_dataloader:
-        data_evaluated += 1
-        if data_evaluated % 100 == 0:
-            print(f"Completed {data_evaluated} points of evaluation.")
+        # data_evaluated += 1
+        # if data_evaluated % 100 == 0:
+        #     print(f"Completed {data_evaluated} points of evaluation.")
 
         # DataLoader adds a batch dimension, but we do not support batch size more than 1 at the moment.
         inputs = list(map(lambda x: x.squeeze(0), inputs))
@@ -68,14 +70,19 @@ def start(args: argparse.Namespace):
     roc_auc = roc_auc_score(labels, outputs)
     pr_auc = average_precision_score(labels, outputs)
 
+    # BCE Loss
+    bce_loss = nn.BCELoss()(torch.tensor(outputs, dtype=torch.float32), torch.tensor(labels, dtype=torch.float32))
+
     # Output the results
-    print('='*80)
-    print(f'Precision: {precision:.4f}')
-    print(f'Recall: {recall:.4f}')
-    print(f'F1 Score: {f1:.4f}')
-    print(f'ROC AUC: {roc_auc:.4f}')
-    print(f'PR AUC: {pr_auc:.4f}')
-    print('='*80)
+    with open('m6a_powernet/output.txt', 'a') as file:
+        print(f'Epoch {args.checkpoint_directory[-6:-4].removeprefix('h')}', file=file)
+        print(f'Precision: {precision:.4f}', file=file)
+        print(f'Recall: {recall:.4f}', file=file)
+        print(f'F1 Score: {f1:.4f}', file=file)
+        print(f'ROC AUC: {roc_auc:.4f}', file=file)
+        print(f'PR AUC: {pr_auc:.4f}', file=file)
+        print(f'BCE Loss: {bce_loss:.4f}', file=file)
+        print('='*80, file=file)
 
     print('Evaluation finished.')
 

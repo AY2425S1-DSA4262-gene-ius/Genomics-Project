@@ -20,16 +20,34 @@ class RNAData(Dataset):
         self.label_path = label_path
         self.seed = seed
         self.sevenmer_mapper = {''.join(sevenmer): index for index, sevenmer in enumerate(product(NUCLEOTIDES, *DRACH_MOTIFS, NUCLEOTIDES))}
-        self.processed_transcripts, self.processed_labels, self.train_indices, self.test_indices = self._load_and_split_data()
-        self.train_mode = True # Default is train mode
+        self.processed_transcripts, self.processed_labels, self.train_indices, self.test_indices, self.validation_indices = self._load_and_split_data()
+        self.mode = 'train' # Default is train mode
 
     def set_train_mode(self):
-        self.train_mode = True
+        self.mode = 'train'
+        self._get_data_info()
         return self
 
     def set_test_mode(self):
-        self.train_mode = False
+        self.mode = 'test'
+        self._get_data_info()
         return self
+    
+    def set_validation_mode(self):
+        self.mode = 'validation'
+        self._get_data_info()
+        return self
+    
+    def _get_data_info(self):
+        return
+        positive_label_count, negative_label_count = 0, 0
+        for _, label in self:
+            if int(label.item()) == 1:
+                positive_label_count += 1
+            else:
+                negative_label_count += 1
+        print(f'Dataset has been set to {self.mode} mode.')
+        print(f'Number of positive labels: {positive_label_count}. Number of negative labels: {negative_label_count}. Total: {positive_label_count + negative_label_count}')
 
     def _read_data(self):
         transcripts = []
@@ -59,9 +77,11 @@ class RNAData(Dataset):
             numpy.random.seed(self.seed)
         numpy.random.shuffle(unique_gene_ids)
 
-        split_index = int(len(unique_gene_ids) * 0.8)
-        train_gene_ids = set(unique_gene_ids[:split_index])
-        test_gene_ids = set(unique_gene_ids[split_index:])
+        first_split_index = int(len(unique_gene_ids) * 0.8)
+        second_split_index = int(len(unique_gene_ids) * 0.9)
+        train_gene_ids = set(unique_gene_ids[:first_split_index])
+        test_gene_ids = set(unique_gene_ids[first_split_index:second_split_index])
+        validation_gene_ids = set(unique_gene_ids[second_split_index:])
 
         for transcript in transcripts:
             transcript_name = list(transcript.keys())[0]
@@ -86,6 +106,7 @@ class RNAData(Dataset):
 
         train_indices = []
         test_indices = []
+        validation_indices = []
 
         for index, label in enumerate(labels.iloc):
             processed_labels.append(torch.tensor(float(label['label'])))
@@ -93,14 +114,16 @@ class RNAData(Dataset):
                 train_indices.append(index)
             elif label['gene_id'] in test_gene_ids:
                 test_indices.append(index)
+            elif label['gene_id'] in validation_gene_ids:
+                validation_indices.append(index)
             else:
                 raise ValueError('How did you get this error? It is literally not possible.')
 
         print('RNA Sequence Dataset has been loaded.')
-        return processed_transcripts, processed_labels, train_indices, test_indices
+        return processed_transcripts, processed_labels, train_indices, test_indices, validation_indices
 
     def data_loader(self):
-        if self.train_mode:
+        if self.mode == 'train':
             labels_tracker = {}
             
             for _, label in self:
@@ -109,7 +132,7 @@ class RNAData(Dataset):
 
             total_datapoints = sum(labels_tracker.values())
             label_weights = {
-                label: (3/4 / (instance_count / total_datapoints)) if label == 0 else (1/4 / (instance_count / total_datapoints))
+                label: (total_datapoints - instance_count) / total_datapoints
                 for label, instance_count in labels_tracker.items()
             }
 
@@ -122,10 +145,25 @@ class RNAData(Dataset):
         return loader
 
     def __len__(self):
-        return len(self.train_indices) if self.train_mode else len(self.test_indices)
+        if self.mode == 'train':
+            return len(self.train_indices)
+        elif self.mode == 'test':
+            return len(self.test_indices)
+        elif self.mode == 'validation':
+            return len(self.validation_indices)
+        else:
+            raise ValueError('How did you get this error? It is literally not possible.')
 
     def __getitem__(self, idx):
-        data_index = self.train_indices[idx] if self.train_mode else self.test_indices[idx]
+        if self.mode == 'train':
+            data_index = self.train_indices[idx]
+        elif self.mode == 'test':
+            data_index = self.test_indices[idx]
+        elif self.mode == 'validation':
+            data_index = self.validation_indices[idx]
+        else:
+            raise ValueError('How did you get this error? It is literally not possible.')
+
         transcript_data = self.processed_transcripts[data_index]
         label = self.processed_labels[data_index]
         
