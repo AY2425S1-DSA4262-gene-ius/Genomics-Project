@@ -2,7 +2,7 @@ import argparse
 
 import pandas as pd
 
-from m6a_modifications.data_processing import process_data
+from m6a_modifications.data_processing import process_and_split_data
 from m6a_modifications.evaluation import evaluate_model
 from m6a_modifications.modelling import train_model
 from m6a_modifications.raw_data_preparer import prepare_data
@@ -13,6 +13,7 @@ def start(
     labels_data_path: str,
     train_data_ratio: float,
     threshold: float,
+    output_file_name: str,
     seed: int,
 ):
     # Prepare the reads data and the labels data
@@ -20,13 +21,13 @@ def start(
     labels_data = pd.read_csv(labels_data_path, sep=',')
 
     # Prepare the train and test data, of which includes data preprocessing and feature engineering
-    X_train, y_train, X_test, y_test, X_train_identity, X_test_identity = process_data(
+    X_train, y_train, X_test, y_test, X_train_identity, X_test_identity = process_and_split_data(
         reads_data, labels_data, train_data_ratio, seed
     )
 
     # Train the model and evaluate
     model = train_model(X_train, y_train, seed)
-    evaluate_model(model, X_test, y_test, threshold)
+    evaluate_model(model, X_test, y_test, X_test_identity, output_file_name, threshold)
     return
 
 
@@ -51,6 +52,11 @@ if __name__ == '__main__':
         help='Probabilistic threshold for binary classification',
     )
     parser.add_argument(
+        '--output_file_name',
+        type=str,
+        help='Filename of output',
+    )
+    parser.add_argument(
         '--seed', type=int, default=42, help='Seed for reproducibility.'
     )
 
@@ -60,5 +66,6 @@ if __name__ == '__main__':
         args.labels_data_path,
         args.train_data_ratio,
         args.threshold,
+        args.output_file_name,
         args.seed,
     )

@@ -1,3 +1,4 @@
+import joblib
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 
@@ -161,7 +162,7 @@ def engineer_features(reads_data: pd.DataFrame):
     return reads_data_grouped
 
 
-def standardise_data(train_data: pd.DataFrame, test_data: pd.DataFrame):
+def standardise_split_data(train_data: pd.DataFrame, test_data: pd.DataFrame):
     # Retrieve column names of data, and exclude columns that we do not want to standardise
     columns_to_standardise = train_data.columns.difference(
         ['gene_id', 'transcript_id', 'transcript_position', 'Sequence', 'label']
@@ -179,3 +180,19 @@ def standardise_data(train_data: pd.DataFrame, test_data: pd.DataFrame):
     )
 
     return train_data, test_data, scaler
+
+def standardise_data(data: pd.DataFrame, standard_scaler_path: str):
+    # Retrieve column names of data, and exclude columns that we do not want to standardise
+    columns_to_standardise = data.columns.difference(
+        ['gene_id', 'transcript_id', 'transcript_position', 'Sequence', 'label']
+    )
+
+    # Initialize the StandardScaler
+    scaler = joblib.load(standard_scaler_path)
+
+    # Scale(standardise)!
+    data[columns_to_standardise] = scaler.transform(
+        data[columns_to_standardise]
+    )
+
+    return data

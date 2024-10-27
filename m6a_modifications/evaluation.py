@@ -1,4 +1,6 @@
 import argparse
+import os
+from typing import Optional
 
 import joblib
 import pandas as pd
@@ -14,26 +16,41 @@ from sklearn.metrics import (
 
 
 def evaluate_model(
-    model: BaseEstimator, X_test: pd.DataFrame, y_test: pd.DataFrame, threshold: float
+    model: BaseEstimator, data: pd.DataFrame, labels: Optional[pd.DataFrame], data_identity: pd.DataFrame, output_file_name: str, threshold: float = 0.5
 ):
-    print('[evaluation] - INFO: Evaluating model performance on test data...')
+    print('[evaluation] - INFO: Running model prediction...')
     # Models supported by scikit-learn may either be probabilistic-based or not, a check is required
     if hasattr(model, 'predict_proba'):
-        y_pred_proba = model.predict_proba(X_test)[:, 1]
-        y_pred = [1 if score >= threshold else 0 for score in y_pred_proba]
+        y_pred = model.predict_proba(data)[:, 1]
+        y_pred_binary = [1 if score >= threshold else 0 for score in y_pred]
     else:
-        y_pred = model.predict(X_test)
+        y_pred = model.predict(data)
+        y_pred_binary = y_pred
 
-    # Print results
-    print('=' * 80)
-    print('Accuracy score:', round(accuracy_score(y_test, y_pred), 4))
-    print('F1 score:', round(f1_score(y_test, y_pred), 4))
-    print('ROC AUC score:', round(roc_auc_score(y_test, y_pred), 4))
-    precision, recall, thresholds = precision_recall_curve(y_test, y_pred)
-    print('PR AUC score:', round(auc(recall, precision), 4))
-    print(classification_report(y_test, y_pred, labels=[0, 1]))
-    print('=' * 80)
-    return
+    # Generate prediction output table
+    selected_data_identity = data_identity[['transcript_id', 'transcript_position']].reset_index(drop=True)
+    results = pd.concat(
+        [selected_data_identity, pd.DataFrame({'score': y_pred})],
+        axis=1
+    )
+
+    os.makedirs('predictions', exist_ok=True)
+    results.to_csv(f'predictions/{output_file_name}', index=False)
+    print(f'[evaluation] - INFO: Saved evaluation as a CSV: predictions/{output_file_name}')
+    
+    if labels is not None:
+        print('[evaluation] - INFO: Evaluating model performance on test data...')
+
+        # Print results
+        print('=' * 80)
+        print('Accuracy score:', round(accuracy_score(labels, y_pred_binary), 4))
+        print('F1 score:', round(f1_score(labels, y_pred_binary), 4))
+        print('ROC AUC score:', round(roc_auc_score(labels, y_pred_binary), 4))
+        precision, recall, thresholds = precision_recall_curve(labels, y_pred_binary)
+        print('PR AUC score:', round(auc(recall, precision), 4))
+        print(classification_report(labels, y_pred_binary, labels=[0, 1]))
+        print('=' * 80)
+        return
 
 
 def load_model(model_file_path: str):
@@ -41,11 +58,12 @@ def load_model(model_file_path: str):
     return model
 
 
-def read_data(x_test_data_path: str, y_test_data_path: str):
-    X_test = pd.read_csv(x_test_data_path, sep=',')
-    y_test = pd.read_csv(y_test_data_path, sep=',')
+def read_data(data_path: str, labels_path: str, data_identity_path: str):
+    data = pd.read_csv(data_path, sep=',')
+    labels = pd.read_csv(labels_path, sep=',')
+    data_identity = pd.read_csv(data_identity_path, sep=',')
 
-    return X_test, y_test
+    return data, labels, data_identity
 
 
 if __name__ == '__main__':
@@ -56,10 +74,18 @@ if __name__ == '__main__':
         '--model_file_path', type=str, help='Path to the joblib model file.'
     )
     parser.add_argument(
-        '--x_test_data_path', type=str, help='Path to the test reads CSV.'
+        '--data_path', type=str, help='Path to the reads CSV.'
     )
     parser.add_argument(
-        '--y_test_data_path', type=str, help='Path to the test data labels.'
+        '--data_identity_path', type=str, help='Identity of each data in the reads CSV.'
+    )
+    parser.add_argument(
+        '--labels_path', type=str, required=False, help='Path to the labels data.'
+    )
+    parser.add_argument(
+        '--output_file_name',
+        type=str,
+        help='Filename of output',
     )
     parser.add_argument(
         '--threshold',
@@ -70,5 +96,5 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     model = load_model(args.model_file_path)
-    X_test, y_test = read_data(args.x_test_data_path, args.y_test_data_path)
-    evaluate_model(model, X_test, y_test, args.threshold)
+    data, labels, data_identity = read_data(args.data_path, args.labels_path, args.data_identity_path)
+    evaluate_model(model, data, labels, data_identity, args.output_file_name, args.threshold)
