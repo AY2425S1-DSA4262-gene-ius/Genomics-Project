@@ -116,7 +116,7 @@ def engineer_features(reads_data: pd.DataFrame):
             'Difference_SD_1_2': agg_funcs,
             'Difference_SD_2_3': agg_funcs,
         }
-    )
+    ).fillna(0)
 
     # Reset the index to bring 'transcript_id', 'transcript_position', and 'Sequence' back as columns
     reads_data_grouped = reads_data_grouped.reset_index()

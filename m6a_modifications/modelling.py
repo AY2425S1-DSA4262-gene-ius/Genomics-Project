@@ -11,7 +11,7 @@ def train_model(X_train: pd.DataFrame, y_train: pd.DataFrame, seed: int):
     print(f'[modelling] - INFO: Initialising model [{MODEL}]...')
 
     # Training!
-    model = HistGradientBoostingClassifier(learning_rate=0.2, max_depth=20, max_iter=300, max_leaf_nodes=127, min_samples_leaf=20, random_state=seed)
+    model = HistGradientBoostingClassifier(learning_rate=0.1, max_iter=100, max_leaf_nodes=31, min_samples_leaf=20, random_state=seed)
     model.fit(X_train, y_train.values.ravel())
     print(f'[modelling] - INFO: Model [{MODEL}] has been trained successfully')
 

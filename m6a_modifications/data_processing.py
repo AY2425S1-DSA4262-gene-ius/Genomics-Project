@@ -98,18 +98,19 @@ def process_and_split_data(
     )
 
     # Save the outputs as a CSV file
-    X_train.to_csv('data/X_train.csv', index=False)
-    y_train.to_csv('data/y_train.csv', index=False)
-    X_test.to_csv('data/X_test.csv', index=False)
-    y_test.to_csv('data/y_test.csv', index=False)
+    os.makedirs('processed_data', exist_ok=True)
+    X_train.to_csv('processed_data/X_train.csv', index=False)
+    y_train.to_csv('processed_data/y_train.csv', index=False)
+    X_test.to_csv('processed_data/X_test.csv', index=False)
+    y_test.to_csv('processed_data/y_test.csv', index=False)
     print(
-        '[data_processing] - INFO: Train and Test data have been saved: data/X_train.csv | data/y_train.csv | data/X_test.csv | data/y_test.csv'
+        '[data_processing] - INFO: Train and Test data have been saved: processed_data/X_train.csv | processed_data/y_train.csv | processed_data/X_test.csv | processed_data/y_test.csv'
     )
 
-    X_train_identity.to_csv('data/X_train_identity.csv', index=False)
-    X_test_identity.to_csv('data/X_test_identity.csv', index=False)
+    X_train_identity.to_csv('processed_data/X_train_identity.csv', index=False)
+    X_test_identity.to_csv('processed_data/X_test_identity.csv', index=False)
     print(
-        '[data_processing] - INFO: Train and Test identity data have been saved: data/X_train_identity.csv | data/X_test_identity.csv'
+        '[data_processing] - INFO: Train and Test identity data have been saved: processed_data/X_train_identity.csv | processed_data/X_test_identity.csv'
     )
 
     return X_train, y_train, X_test, y_test, X_train_identity, X_test_identity
@@ -143,14 +144,15 @@ def process_data(
     pca_data = run_pca(data_features, pca_path)
 
     # Save the outputs as a CSV file
-    pca_data.to_csv('data/processed_data.csv', index=False)
+    os.makedirs('processed_data', exist_ok=True)
+    pca_data.to_csv('processed_data/processed_data.csv', index=False)
     print(
-        '[data_processing] - INFO: Data have been saved: data/processed_data.csv'
+        '[data_processing] - INFO: Data have been saved: processed_data/processed_data.csv'
     )
 
-    data_identity.to_csv('data/processed_data_identity.csv', index=False)
+    data_identity.to_csv('processed_data/processed_data_identity.csv', index=False)
     print(
-        '[data_processing] - INFO: Identity data been saved: data/processed_data_identity.csv'
+        '[data_processing] - INFO: Identity data been saved: processed_data/processed_data_identity.csv'
     )
 
     return pca_data, data_identity
