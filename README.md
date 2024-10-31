@@ -6,15 +6,19 @@ This repository contains the code for the DSA4262 Genomics Project by Team Gene-
 >
 > **👋 Hello Student Evaluators!**
 >
-> Welcome! We understand our README may be lengthy. If you’re short on time (or patience), you can simply run the commands below in sequence within your initialised Research Catalyst instance to execute the prediction script and generate the output file directly.
+> Welcome! We understand our README may be lengthy. If you’re short on time (or patience), you can simply run the commands below in sequence to execute the prediction script and generate the output file directly.
 >
 > </p>
 >
-> Just make sure your `EBSVolumeSize` is at least `100` and `InstanceType` is at least `t3.medium`.
+> If you're using the AWS instance, just make sure your `EBSVolumeSize` is at least `100` and `InstanceType` is at least `t3.medium`. Also, please SSH in your terminal. Stay away from the terminal in Research Gateway, you cannot copy and paste there...
+>
+> If you're running locally, make sure you have **Python version 3.9 or later**.
 >
 > The output file will then be generated in `predictions/sample_data_predictions.csv`
 
 ## Student Evaluation TLDR
+
+### If you're using AWS Instance, set up Python 3.9:
 
 ```bash
 # Install Python 3.9 (Run this command alone, and press `y` when indicated)
@@ -30,22 +34,29 @@ curl https://bootstrap.pypa.io/get-pip.py | sudo python3.9
 # Set up `pip` symlink (Do not miss out the `1` at the end)
 sudo update-alternatives --install /usr/bin/pip pip /usr/local/bin/pip3.9 1
 
-# Clone the repo and change directory
-git clone https://github.com/AY2425S1-DSA4262-gene-ius/Genomics-Project.git
-cd Genomics-Project
-
 # Download `distutil` and `pip`
 sudo apt install python3.9-distutils
 curl https://bootstrap.pypa.io/get-pip.py | sudo python3.9
 
 # Set up `pip` symlink to point to Python 3.9's `pip` (Do not miss out the `1` at the end)
 sudo update-alternatives --install /usr/bin/pip pip /usr/local/bin/pip3.9 1
+```
+
+### Whether on the AWS Instance or locally, run this for predictions:
+
+```Bash
+# Clone the repo and change directory
+git clone https://github.com/AY2425S1-DSA4262-gene-ius/Genomics-Project.git
+cd Genomics-Project
 
 # Install packages
 pip install -r requirements.txt
 
 # Run the prediction
 python -m make_predictions --data_file_path data/sample_data.json.gz --model_path models/Histogram-based_Gradient_Boosting.joblib --standard_scaler_path artifacts/standard_scaler.joblib --pca_path artifacts/pca.joblib --output_file_name sample_data_predictions.csv
+
+# If you`re on linux, read the output in the terminal
+head predictions/sample_data_predictions.csv
 ```
 
 Back to the README...
