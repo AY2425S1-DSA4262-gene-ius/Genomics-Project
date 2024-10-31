@@ -20,7 +20,7 @@ Usage:
 Example:
     python -m m6a_modifications.data_processing --reads_data_path reads.csv --labels_data_path labels.csv --train_data_ratio 0.8 
                      --standard_scaler_path artifacts/standard_scaler.joblib --pca_path artifacts/pca.joblib 
-                     --seed 42
+                     --seed 888
 """
 
 import argparse
@@ -86,7 +86,7 @@ def process_and_split_data(
 
     # Train-test split
     print(
-        f'[data_processing] - INFO: Splitting the data into train and test with the ratio of {train_data_ratio * 100}:{(1 - train_data_ratio) * 100}...'
+        f'[data_processing] - INFO: Splitting the data into train and test with the ratio of {round(train_data_ratio * 100)}:{round((1 - train_data_ratio) * 100)}...'
     )
     train_data, test_data = split_data(merged_data, train_data_ratio, seed)
 
@@ -121,7 +121,7 @@ def process_and_split_data(
     print(
         '[data_processing] - INFO: Running Principal Component Analysis on the numerical features...'
     )
-    X_train, X_test, pca = run_split_pca(X_train, X_test)
+    X_train, X_test, pca = run_split_pca(X_train, X_test, seed)
 
     # Save the PCA artifact as a joblib file under `artifacts`
     joblib.dump(pca, 'artifacts/pca.joblib')
@@ -133,7 +133,7 @@ def process_and_split_data(
     print('[data_processing] - INFO: Excuting oversampling using SMOTE...')
     y_train_zeros_count = y_train.value_counts()[0]
     y_train_ones_count = y_train.value_counts()[1]
-    X_train, y_train = run_smote(X_train, y_train)
+    X_train, y_train = run_smote(X_train, y_train, seed)
     print(
         f'[data_processing] - DEBUG: Training data has been oversampled [0s: {y_train_zeros_count}, 1s: {y_train_ones_count} ---> 0s: {y_train.value_counts()[0]}, 1s: {y_train.value_counts()[1]}]'
     )
@@ -251,7 +251,7 @@ if __name__ == '__main__':
     parser.add_argument('--standard_scaler_path', type=str, help='Path to the fitted StandardScaler.')
     parser.add_argument('--pca_path', type=str, help='Path to the fitted PCA artifact.')
     parser.add_argument(
-        '--seed', type=int, default=42, help='Seed for reproducibility.'
+        '--seed', type=int, default=888, help='Seed for reproducibility.'
     )
 
     # Parse arguments

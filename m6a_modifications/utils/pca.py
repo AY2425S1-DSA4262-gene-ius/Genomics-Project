@@ -24,7 +24,7 @@ import pandas as pd
 from sklearn.decomposition import PCA
 
 
-def run_split_pca(X_train: pd.DataFrame, X_test: pd.DataFrame):
+def run_split_pca(X_train: pd.DataFrame, X_test: pd.DataFrame, seed: int = 888):
     """
     Fit PCA on the training data and transform both training and test data.
 
@@ -34,6 +34,7 @@ def run_split_pca(X_train: pd.DataFrame, X_test: pd.DataFrame):
     Args:
         X_train (pd.DataFrame): The training dataset with features.
         X_test (pd.DataFrame): The testing dataset with features.
+        seed (int): Random seed for reproducibility (default is 888).
 
     Returns:
         tuple: A tuple containing the PCA-transformed training data, 
@@ -41,7 +42,7 @@ def run_split_pca(X_train: pd.DataFrame, X_test: pd.DataFrame):
     """
 
     # Initialise PCA and apply with 95% variance explained
-    pca = PCA(n_components=0.95)
+    pca = PCA(n_components=0.95, random_state=seed)
     X_train_pca = pca.fit_transform(X_train)
     X_test_pca = pca.transform(X_test)
 

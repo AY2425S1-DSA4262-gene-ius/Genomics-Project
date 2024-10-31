@@ -80,7 +80,7 @@ For further modifications to the parameters, you may refer to the flags below:
 | `--output_file_name`| `str` | Filename for the output. | None |
 | `--train_data_ratio`| `float`| Ratio for train data in train-test split. | `0.8` |
 | `--threshold` | `float`| Probabilistic threshold for binary classification.| `0.5` |
-| `--seed` | `int` | Seed for reproducibility. | `42` |
+| `--seed` | `int` | Seed for reproducibility. | `888` |
 
 If you wish, you may run the following command for information about the flags:
 
@@ -148,8 +148,8 @@ python -m m6a_modifications.raw_data_preparer --data_file_path data/dataset0.jso
 python -m m6a_modifications.data_processing --reads_data_path data/dataset0.json.gz.csv --labels_data_path data/data.info.labelled
 
 # Model Training
-python -m m6a_modifications.modelling --x_train_data_path data/X_train.csv --y_train_data_path data/y_train.csv
+python -m m6a_modifications.modelling --x_train_data_path processed_data/X_train.csv --y_train_data_path processed_data/y_train.csv
 
 # Evaluation
-python -m m6a_modifications.evaluation --model_file_path models/Histogram-based_Gradient_Boosting.joblib --x_test_data_path data/X_test.csv --y_test_data_path data/y_test.csv
+python -m m6a_modifications.evaluation --model_file_path models/Histogram-based_Gradient_Boosting.joblib --data_path processed_data/X_test.csv --data_identity_path processed_data/X_test_identity.csv --labels_path processed_data/y_test.csv
 ```

@@ -15,7 +15,7 @@ Usage:
     python -m m6a_modifications.modelling --x_train_data_path <path> --y_train_data_path <path> --seed <seed>
 
 Example:
-    python -m m6a_modifications.modelling --x_train_data_path X_train.csv --y_train_data_path y_train.csv --seed 42
+    python -m m6a_modifications.modelling --x_train_data_path X_train.csv --y_train_data_path y_train.csv --seed 888
 """
 
 import argparse
@@ -85,7 +85,7 @@ if __name__ == '__main__':
         '--y_train_data_path', type=str, help='Path to the train data labels.'
     )
     parser.add_argument(
-        '--seed', type=int, default=42, help='Seed for reproducibility.'
+        '--seed', type=int, default=888, help='Seed for reproducibility.'
     )
 
     # Parse arguments

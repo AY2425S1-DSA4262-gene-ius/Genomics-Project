@@ -19,7 +19,7 @@ Usage:
 
 Example:
     python -m model_training --data_file_path data.json.gz --labels_data_path labels.csv --train_data_ratio 0.8 
-                     --threshold 0.5 --output_file_name results.csv --seed 42
+                     --threshold 0.5 --output_file_name results.csv --seed 888
 """
 
 import argparse
@@ -99,7 +99,7 @@ if __name__ == '__main__':
         help='Filename of output',
     )
     parser.add_argument(
-        '--seed', type=int, default=42, help='Seed for reproducibility.'
+        '--seed', type=int, default=888, help='Seed for reproducibility.'
     )
 
     # Parsing command-line arguments

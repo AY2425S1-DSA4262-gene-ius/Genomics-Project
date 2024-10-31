@@ -6,7 +6,7 @@ and testing sets based on unique gene identifiers. The splitting is
 done randomly while maintaining the distribution of unique genes.
 
 Required Libraries:
-- random: For generating random numbers.
+- random: For shuffling the unique genes.
 - pandas: For data manipulation and analysis.
 
 Functions:
@@ -24,7 +24,7 @@ import pandas as pd
 
 
 def split_data(
-    merged_data: pd.DataFrame, train_data_ratio: float = 0.8, seed: int = 42
+    merged_data: pd.DataFrame, train_data_ratio: float = 0.8, seed: int = 888
 ):
     """
     Split the merged dataset into training and testing sets based on unique gene identifiers.
@@ -36,7 +36,7 @@ def split_data(
     Args:
         merged_data (pd.DataFrame): The dataset to be split, containing a 'gene_id' column.
         train_data_ratio (float): The ratio of data to be used for training (default is 0.8).
-        seed (int): Random seed for reproducibility (default is 42).
+        seed (int): Random seed for reproducibility (default is 888).
 
     Returns:
         tuple: A tuple containing two DataFrames: the training data and the testing data.
@@ -51,7 +51,7 @@ def split_data(
         unique_genes.add(data_row['gene_id'])
 
     # Shuffle genes to get random permutation
-    unique_genes = list(unique_genes)
+    unique_genes = sorted(list(unique_genes)) # The unique genes are sorted as the conversion from set to list may result in a random permutation that cannot be reproduced
     random.shuffle(unique_genes)
 
     # Split the genes into training and testing sets
