@@ -37,7 +37,7 @@ TO BE CONFIRMED
 
 ### **OPTIONAL** - Setup Local Environment
 
-We strong encourage you to utilise a local environment for package installation before proceeding with the steps.
+We strongly encourage you to utilise a local environment for package installation before proceeding with the steps.
 
 Refer to the following links for possible setup of the local environment:
 
