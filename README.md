@@ -2,10 +2,28 @@
 
 This repository contains the code for the DSA4262 Genomics Project by Team Gene-ius. The pipeline supports data preparation, feature engineering, model training, and evaluation, which can be run as standalone modules or sequentially through curated scripts. More details are provided below.
 
-## Machine Prerequisites
+## System Requirements
 
--   **AWS Instance**: TO BE CONFIRMED
--   **Local Machine**: TO BE CONFIRMED
+Our workflow requires **Python 3.9** or later. Please ensure your Python version is correct before proceeding.
+
+**AWS Instance**
+
+When initialising your instance, kindly stick to `EBSVolumeSize` of at least `100` and `InstanceType` of at least `t3.medium`.
+
+> [!IMPORTANT]
+> The instance unfortunately comes with **Python 3.8.10**. As such, please execute the commands below sequentially to upgrade it to **Python 3.9**:
+
+```bash
+# Install Python 3.9
+sudo apt install python3.9
+
+# Point `python` symlink to the installed Python 3.9 (Do not miss out the `1` at the end)
+sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.9 1
+```
+
+**Local Machine**
+
+Ensure that you have downloaded **Python 3.9** or later in your machine.
 
 ## Set Up Repository
 
@@ -27,13 +45,22 @@ cd Genomics-Project
 
 `pip` is a package installer for python. We will utilise it for any package dependencies in the project.
 
--   **AWS Instance**:
+**AWS Instance**:
 
-```
-TO BE CONFIRMED
+Unfortunately, `pip` does not come with the instance. Execute the commands below sequentially:
+
+```bash
+# Download `distutil` and `pip`
+sudo apt install python3.9-distutils
+curl https://bootstrap.pypa.io/get-pip.py | sudo python3.9
+
+# Set up `pip` symlink to point to Python 3.9's `pip` (Do not miss out the `1` at the end)
+sudo update-alternatives --install /usr/bin/pip pip /usr/local/bin/pip3.9 1
 ```
 
--   **Local Machine**: If Python is already installed, `pip` should be included automatically.
+**Local Machine**:
+
+If Python is already installed, `pip` should be included automatically.
 
 ### **OPTIONAL** - Setup Local Environment
 
@@ -53,6 +80,12 @@ While in `Genomics-Project` folder, run:
 ```bash
 pip install -r requirements.txt
 ```
+
+> [!WARNING]
+> If you face this error when installing the packages:
+> `ERROR: Could not find a version that satisfies the requirement...`
+>
+> Please refer to the System Requirements section to upgrade Python 3.8.10 to Python 3.9.
 
 You’re now set to run training and make predictions using our pipeline.
 
