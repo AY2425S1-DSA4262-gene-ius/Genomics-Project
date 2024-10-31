@@ -238,5 +238,3 @@ python -m m6a_modifications.modelling --x_train_data_path processed_data/X_train
 # Evaluation
 python -m m6a_modifications.evaluation --model_file_path models/Histogram-based_Gradient_Boosting.joblib --data_path processed_data/X_test.csv --data_identity_path processed_data/X_test_identity.csv --labels_path processed_data/y_test.csv
 ```
-
-## Student Evaluation TLDR
