@@ -4,9 +4,10 @@ This repository contains the code for the DSA4262 Genomics Project by Team Gene-
 
 > [!TIP]
 >
-> <p style="font-size: 35px"><b>👋 Hello Student Evaluators!</b></p>
-> <p style="font-size: 18px">
+> **👋 Hello Student Evaluators!**
+>
 > Welcome! We understand our README may be lengthy. If you’re short on time (or patience), you can simply run the commands below in sequence within your initialised Research Catalyst instance to execute the prediction script and generate the output file directly.
+>
 > </p>
 >
 > Just make sure your `EBSVolumeSize` is at least `100` and `InstanceType` is at least `t3.medium`.
@@ -47,9 +48,7 @@ pip install -r requirements.txt
 python -m make_predictions --data_file_path data/sample_data.json.gz --model_path models/Histogram-based_Gradient_Boosting.joblib --standard_scaler_path artifacts/standard_scaler.joblib --pca_path artifacts/pca.joblib --output_file_name sample_data_predictions.csv
 ```
 
-<p style="font-size: 18px">
 Back to the README...
-</p>
 
 ## System Requirements
 
