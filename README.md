@@ -2,6 +2,55 @@
 
 This repository contains the code for the DSA4262 Genomics Project by Team Gene-ius. The pipeline supports data preparation, feature engineering, model training, and evaluation, which can be run as standalone modules or sequentially through curated scripts. More details are provided below.
 
+> [!TIP]
+>
+> <p style="font-size: 35px"><b>👋 Hello Student Evaluators!</b></p>
+> <p style="font-size: 18px">
+> Welcome! We understand our README may be lengthy. If you’re short on time (or patience), you can simply run the commands below in sequence within your initialised Research Catalyst instance to execute the prediction script and generate the output file directly.
+> </p>
+>
+> Just make sure your `EBSVolumeSize` is at least `100` and `InstanceType` is at least `t3.medium`.
+>
+> The output file will then be generated in `predictions/sample_data_predictions.csv`
+
+## Student Evaluation TLDR
+
+```bash
+# Install Python 3.9 (Run this command alone, and press `y` when indicated)
+sudo apt install python3.9
+
+# Set up `python` symlink (Do not miss out the `1` at the end)
+sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.9 1
+
+# Download `distutil` and `pip`
+sudo apt install python3.9-distutils
+curl https://bootstrap.pypa.io/get-pip.py | sudo python3.9
+
+# Set up `pip` symlink (Do not miss out the `1` at the end)
+sudo update-alternatives --install /usr/bin/pip pip /usr/local/bin/pip3.9 1
+
+# Clone the repo and change directory
+git clone https://github.com/AY2425S1-DSA4262-gene-ius/Genomics-Project.git
+cd Genomics-Project
+
+# Download `distutil` and `pip`
+sudo apt install python3.9-distutils
+curl https://bootstrap.pypa.io/get-pip.py | sudo python3.9
+
+# Set up `pip` symlink to point to Python 3.9's `pip` (Do not miss out the `1` at the end)
+sudo update-alternatives --install /usr/bin/pip pip /usr/local/bin/pip3.9 1
+
+# Install packages
+pip install -r requirements.txt
+
+# Run the prediction
+python -m make_predictions --data_file_path data/sample_data.json.gz --model_path models/Histogram-based_Gradient_Boosting.joblib --standard_scaler_path artifacts/standard_scaler.joblib --pca_path artifacts/pca.joblib --output_file_name sample_data_predictions.csv
+```
+
+<p style="font-size: 18px">
+Back to the README...
+</p>
+
 ## System Requirements
 
 Our workflow requires **Python 3.9** or later. Please ensure your Python version is correct before proceeding.
@@ -186,3 +235,5 @@ python -m m6a_modifications.modelling --x_train_data_path processed_data/X_train
 # Evaluation
 python -m m6a_modifications.evaluation --model_file_path models/Histogram-based_Gradient_Boosting.joblib --data_path processed_data/X_test.csv --data_identity_path processed_data/X_test_identity.csv --labels_path processed_data/y_test.csv
 ```
+
+## Student Evaluation TLDR
