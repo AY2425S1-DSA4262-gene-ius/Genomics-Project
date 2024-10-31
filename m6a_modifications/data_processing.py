@@ -1,6 +1,30 @@
+"""
+Script for processing, feature engineering, and splitting of data.
+
+This script performs data preparation tasks, including feature engineering, standardisation, 
+Principal Component Analysis (PCA), and train-test splitting with optional SMOTE oversampling 
+to address data imbalance. It can save processed data and artifacts for later model training 
+and evaluation.
+
+Modules Required:
+- argparse: For command-line argument parsing
+- os: For directory and file handling
+- joblib: For saving trained scalers and PCA models
+- pandas: For handling data in DataFrame format
+- m6a_modifications.utils: Contains data transformation and utility functions for feature engineering, PCA, SMOTE, etc.
+
+Usage:
+    python -m m6a_modifications.data_processing --reads_data_path <path> --labels_data_path <path> --train_data_ratio <ratio>
+                     --standard_scaler_path <path> --pca_path <path> --seed <seed>
+
+Example:
+    python -m m6a_modifications.data_processing --reads_data_path reads.csv --labels_data_path labels.csv --train_data_ratio 0.8 
+                     --standard_scaler_path artifacts/standard_scaler.joblib --pca_path artifacts/pca.joblib 
+                     --seed 42
+"""
+
 import argparse
 import os
-from typing import Optional
 
 import joblib
 import pandas as pd
@@ -21,6 +45,23 @@ def process_and_split_data(
     train_data_ratio: float,
     seed: int,
 ):
+    """
+    Process and split data for training and evaluation.
+
+    This function performs feature engineering, standardisation, PCA, train-test splitting, 
+    and SMOTE oversampling to balance the dataset. The processed data and metadata 
+    are saved as CSV files for future use.
+
+    Args:
+        reads_data (pd.DataFrame): DataFrame with read data.
+        labels_data (pd.DataFrame): DataFrame with label data.
+        train_data_ratio (float): Ratio of data to use for training.
+        seed (int): Random seed for reproducibility.
+
+    Returns:
+        tuple: Processed train/test datasets and their metadata.
+    """
+
     print('[data_processing] - INFO: Executing feature engineering...')
     # Feature engineer the reads data
     engineered_reads_data = engineer_features(reads_data)
@@ -121,6 +162,18 @@ def process_data(
     standard_scaler_path: str,
     pca_path: str,
 ):
+    """
+    Process data without splitting for prediction or inference use.
+
+    Args:
+        reads_data (pd.DataFrame): DataFrame with read data to process.
+        standard_scaler_path (str): Path to a saved StandardScaler model.
+        pca_path (str): Path to a saved PCA model.
+
+    Returns:
+        tuple: Processed feature data and identity metadata for evaluation.
+    """
+
     print('[data_processing] - INFO: Executing feature engineering...')
     # Feature engineer the reads data
     engineered_reads_data = engineer_features(reads_data)
@@ -158,6 +211,17 @@ def process_data(
     return pca_data, data_identity
 
 def read_data(reads_data_path: str, labels_data_path: str):
+    """
+    Read the read data and labels data from CSV files.
+
+    Args:
+        reads_data_path (str): Path to the read data CSV.
+        labels_data_path (str): Path to the labels data CSV.
+
+    Returns:
+        tuple: Read data and labels DataFrames.
+    """
+
     print(
         f'[data_processing] - INFO: Reading data and its labels from: {reads_data_path} | {labels_data_path}'
     )
@@ -168,9 +232,12 @@ def read_data(reads_data_path: str, labels_data_path: str):
 
 
 if __name__ == '__main__':
+    # Set up argparse to parse command-line arguments
     parser = argparse.ArgumentParser(
         description='Process data, of which includes feature engineering and cleaning up.'
     )
+
+    # Define command-line arguments
     parser.add_argument(
         '--reads_data_path', type=str, help='Path to the prepared reads CSV.'
     )
@@ -186,8 +253,11 @@ if __name__ == '__main__':
     parser.add_argument(
         '--seed', type=int, default=42, help='Seed for reproducibility.'
     )
+
+    # Parse arguments
     args = parser.parse_args()
 
+    # Execute the appropriate processing function based on arguments
     if args.train_data_ratio:
         print(
             f'[data_processing] - INFO: Reading data and its labels from: {args.reads_data_path} | {args.labels_data_path}'

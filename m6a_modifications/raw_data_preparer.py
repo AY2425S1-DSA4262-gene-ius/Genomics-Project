@@ -1,3 +1,22 @@
+"""
+Script for preparing raw transcript data from a JSON file.
+
+This script processes transcript data from either a gzipped JSON file or a standard JSON file,
+extracting relevant features and saving the results in a CSV format.
+
+Modules Required:
+- argparse: For parsing command-line arguments.
+- gzip: For handling gzipped files.
+- json: For parsing JSON data.
+- pandas: For data manipulation and saving data to CSV files.
+
+Usage:
+    python -m m6a_modifications.raw_data_preparer --data_file_path <path>
+
+Example:
+    python -m m6a_modifications.raw_data_preparer --data_file_path dataset.json.gz
+"""
+
 import argparse
 import gzip
 import json
@@ -6,6 +25,19 @@ import pandas as pd
 
 
 def prepare_data(data_file_path: str):
+    """
+    Prepare and process raw transcript data from a JSON or gzipped JSON file.
+
+    This function reads the input file, extracts relevant transcript information,
+    and saves it as a CSV file.
+
+    Args:
+        data_file_path (str): Path to the gzipped or uncompressed JSON file containing transcript data.
+
+    Returns:
+        pd.DataFrame: DataFrame containing the processed transcript data.
+    """
+
     print(
         f'[raw_data_preparer] - INFO: Initialising the processing of reads: {data_file_path}'
     )
@@ -72,6 +104,7 @@ def prepare_data(data_file_path: str):
 
 
 if __name__ == '__main__':
+    # Set up argparse to parse command-line arguments
     parser = argparse.ArgumentParser(
         description='Process transcript data from the raw compressed dataset json file.'
     )
@@ -79,5 +112,9 @@ if __name__ == '__main__':
         '--data_file_path', type=str, help='Path to the gzipped dataset json file.'
     )
 
+
+    # Parse command-line arguments
     args = parser.parse_args()
+
+    # Prepare data from the provided file path
     prepare_data(args.data_file_path)
