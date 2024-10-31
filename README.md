@@ -10,7 +10,7 @@ This repository contains the code for the DSA4262 Genomics Project by Team Gene-
 >
 > </p>
 >
-> If you're using the AWS instance, just make sure your `EBSVolumeSize` is at least `100` and `InstanceType` is at least `t3.medium`. Also, please SSH in your terminal. Stay away from the terminal in Research Gateway, you cannot copy and paste there...
+> If you're using the AWS instance, just make sure your `EBSVolumeSize` is at least `100` and `InstanceType` is at least `t3.medium`. Also, please SSH in your terminal (`ssh -i /path/to/your/.pem ubuntu@XXX.XXX.XXX`). Stay away from the terminal in Research Gateway, you cannot copy and paste there...
 >
 > If you're running locally, make sure you have **Python version 3.9 or later**.
 >
@@ -32,13 +32,6 @@ sudo apt install python3.9-distutils
 curl https://bootstrap.pypa.io/get-pip.py | sudo python3.9
 
 # Set up `pip` symlink (Do not miss out the `1` at the end)
-sudo update-alternatives --install /usr/bin/pip pip /usr/local/bin/pip3.9 1
-
-# Download `distutil` and `pip`
-sudo apt install python3.9-distutils
-curl https://bootstrap.pypa.io/get-pip.py | sudo python3.9
-
-# Set up `pip` symlink to point to Python 3.9's `pip` (Do not miss out the `1` at the end)
 sudo update-alternatives --install /usr/bin/pip pip /usr/local/bin/pip3.9 1
 ```
 
