@@ -6,7 +6,7 @@ This repository contains the code for the DSA4262 Genomics Project by Team Gene-
 
 Our workflow requires **Python 3.9** or later. Please ensure your Python version is correct before proceeding.
 
-**AWS Instance**
+**AWS Instance:**
 
 When initialising your instance, kindly stick to `EBSVolumeSize` of at least `100` and `InstanceType` of at least `t3.medium`.
 
@@ -21,7 +21,7 @@ sudo apt install python3.9
 sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.9 1
 ```
 
-**Local Machine**
+**Local Machine:**
 
 Ensure that you have downloaded **Python 3.9** or later in your machine.
 
@@ -45,7 +45,7 @@ cd Genomics-Project
 
 `pip` is a package installer for python. We will utilise it for any package dependencies in the project.
 
-**AWS Instance**:
+**AWS Instance:**
 
 Unfortunately, `pip` does not come with the instance. Execute the commands below sequentially:
 
@@ -58,7 +58,7 @@ curl https://bootstrap.pypa.io/get-pip.py | sudo python3.9
 sudo update-alternatives --install /usr/bin/pip pip /usr/local/bin/pip3.9 1
 ```
 
-**Local Machine**:
+**Local Machine:**
 
 If Python is already installed, `pip` should be included automatically.
 
