@@ -125,13 +125,14 @@ python -m make_predictions --data_file_path data/sample_data.json.gz --model_pat
 
 The predictions will then be generated in the `predictions` folder with your indicated output file name.
 
-| Flag                     | Type  | Description                            | Default |
+The flags for the command that executes the prediction pipeline are as follows:
+| Flag | Type | Description | Default |
 | ------------------------ | ----- | -------------------------------------- | ------- |
-| `--data_file_path`       | `str` | Path to the gzipped dataset JSON file. | None    |
-| `--model_path`           | `str` | Path to the trained model.             | None    |
-| `--standard_scaler_path` | `str` | Path to the fitted StandardScaler.     | None    |
-| `--pca_path`             | `str` | Path to the fitted PCA artifact.       | None    |
-| `--output_file_name`     | `str` | Filename for the output.               | None    |
+| `--data_file_path` | `str` | Path to the gzipped dataset JSON file. | None |
+| `--model_path` | `str` | Path to the trained model. | None |
+| `--standard_scaler_path` | `str` | Path to the fitted StandardScaler. | None |
+| `--pca_path` | `str` | Path to the fitted PCA artifact. | None |
+| `--output_file_name` | `str` | Filename for the output. | None |
 
 ### Running Individual Components
 
