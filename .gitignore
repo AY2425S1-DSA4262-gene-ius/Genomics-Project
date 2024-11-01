@@ -1,5 +1,5 @@
-/data
-/venv
-__pycache__
-m6a_powernet/checkpoints_old
 wandb
+__pycache__
+venv
+.ruff_cache
+predictions
