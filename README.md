@@ -144,14 +144,14 @@ Refer to the following links for possible setup of the local environment:
 
 To quickly set up an environment, you may simply run the following:
 
-**MacOS**
+**MacOS/Linux(AWS Instance)**
 
 ```bash
 python -m venv venv
 source venv/bin/activate
 ```
 
-**Windows/Linux(AWS Instance)**
+**Windows**
 
 ```bash
 python -m venv venv
