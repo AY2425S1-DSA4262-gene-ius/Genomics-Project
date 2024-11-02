@@ -10,7 +10,7 @@ This repository contains the code for the DSA4262 Genomics Project by Team Gene-
 >
 > </p>
 >
-> If you're using the AWS instance, just make sure your `EBSVolumeSize` is at least `100` and `InstanceType` is at least `t3.medium`. Also, please SSH in your terminal (`ssh -i /path/to/your/.pem ubuntu@XXX.XXX.XXX`). Stay away from the terminal in Research Gateway, you cannot copy and paste there...
+> If you're using the AWS instance, just make sure your `EBSVolumeSize` is at least `100` and `InstanceType` is at least `t3.medium`. Also, do SSH in your terminal (`ssh -i /path/to/your/.pem ubuntu@XXX.XXX.XXX`), since the terminal in Research Gateway may be buggy for some.
 >
 > If you're running locally, make sure you have **Python version 3.9 or later**.
 >
@@ -33,18 +33,21 @@ curl https://bootstrap.pypa.io/get-pip.py | sudo python3.9
 
 # Set up `pip` symlink (Do not miss out the `1` at the end)
 sudo update-alternatives --install /usr/bin/pip pip /usr/local/bin/pip3.9 1
+
+# Download Python3.9 venv
+sudo apt install python3.9-venv
 ```
 
 ### Whether on the AWS Instance or locally, set up package environment:
 
-**MacOS**
+**MacOS/Linux(AWS Instance)**
 
 ```bash
 python -m venv venv
 source venv/bin/activate
 ```
 
-**Windows/Linux(AWS Instance)**
+**Windows**
 
 ```bash
 python -m venv venv
