@@ -16,7 +16,7 @@ This repository contains the code for the DSA4262 Genomics Project by Team Gene-
 >
 > The output file will then be generated in `predictions/sample_data_predictions.csv`
 
-## Student Evaluation TLDR
+## Summary of Commands (to get output)
 
 ### If you're using AWS Instance, set up Python 3.9:
 
