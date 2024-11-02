@@ -35,6 +35,22 @@ curl https://bootstrap.pypa.io/get-pip.py | sudo python3.9
 sudo update-alternatives --install /usr/bin/pip pip /usr/local/bin/pip3.9 1
 ```
 
+### Whether on the AWS Instance or locally, set up package environment:
+
+**MacOS**
+
+```bash
+python -m venv venv
+source venv/bin/activate
+```
+
+**Windows/Linux(AWS Instance)**
+
+```bash
+python -m venv venv
+venv/Scripts/activate
+```
+
 ### Whether on the AWS Instance or locally, run this for predictions:
 
 ```Bash
@@ -123,7 +139,21 @@ Refer to the following links for possible setup of the local environment:
 -   [conda](https://docs.conda.io/projects/conda/en/latest/user-guide/getting-started.html)
 -   [venv](https://docs.python.org/3/library/venv.html)
 
-If you have set up your enviroment, or are not concerned with package isolation, you may continue with the follow steps.
+To quickly set up an environment, you may simply run the following:
+
+**MacOS**
+
+```bash
+python -m venv venv
+source venv/bin/activate
+```
+
+**Windows/Linux(AWS Instance)**
+
+```bash
+python -m venv venv
+venv/Scripts/activate
+```
 
 ### Installing packages
 
