@@ -130,7 +130,7 @@ sudo update-alternatives --install /usr/bin/pip pip /usr/local/bin/pip3.9 1
 
 If Python is already installed, `pip` should be included automatically.
 
-### **OPTIONAL** - Setup Local Environment
+### Setup Local Environment
 
 We strongly encourage you to utilise a local environment for package installation before proceeding with the steps.
 
