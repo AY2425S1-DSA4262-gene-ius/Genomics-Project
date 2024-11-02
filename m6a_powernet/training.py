@@ -41,7 +41,7 @@ def parse_arguments() -> argparse.Namespace:
 
     return args
 
-# python -m m6a_powernet.training --dataset_path data/dataset0.json.gz --labels_path data/data.info.labelled --checkpoints_directory m6a_powernet/checkpoints --num_epochs 100 --learning_rate 0.0005
+# python -m m6a_powernet.training --dataset_path data/dataset0.json.gz --labels_path data/data.info.labelled --checkpoints_directory m6a_powernet/checkpoints --num_epochs 10 --learning_rate 0.005 --warmup_epochs 2 
 def start(args: argparse.Namespace):
     wandb.init(project="m6a-powernet-training", name="First run", config={
         "Total Epochs": args.num_epochs,
