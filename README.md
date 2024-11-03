@@ -1,6 +1,6 @@
 # DSA4262 Genomics Project: Prediction of m6A RNA modifications from direct RNA-Seq data
 
-This repository contains the code for the DSA4262 Genomics Project by Team Gene-ius. The pipeline supports data preparation, feature engineering, model training, and evaluation, which can be run as standalone modules or sequentially through curated scripts. More details are provided below.
+This repository contains the code for the DSA4262 Genomics Project by Team gene-ius. The pipeline supports data preparation, feature engineering, model training, and evaluation, which can be run as standalone modules or sequentially through curated scripts. More details are provided below.
 
 > [!TIP]
 >
