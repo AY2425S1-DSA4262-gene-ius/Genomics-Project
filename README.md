@@ -1,6 +1,6 @@
 # DSA4262 Genomics Project: Prediction of m6A RNA modifications from direct RNA-Seq data
 
-This repository contains the code for the DSA4262 Genomics Project by Team Gene-ius. The pipeline supports data preparation, feature engineering, model training, and evaluation, which can be run as standalone modules or sequentially through curated scripts. More details are provided below.
+This repository contains the code for the DSA4262 Genomics Project by Team gene-ius. The pipeline supports data preparation, feature engineering, model training, and evaluation, which can be run as standalone modules or sequentially through curated scripts. More details are provided below.
 
 > [!TIP]
 >
@@ -18,7 +18,7 @@ This repository contains the code for the DSA4262 Genomics Project by Team Gene-
 
 ## Summary of Commands (to get output)
 
-### If you're using AWS Instance, set up Python 3.9:
+### If you're using AWS Instance, set up Python 3.9 and pip:
 
 ```bash
 # Install Python 3.9 (Run this command alone, and press `y` when indicated)
@@ -38,32 +38,41 @@ sudo update-alternatives --install /usr/bin/pip pip /usr/local/bin/pip3.9 1
 sudo apt install python3.9-venv
 ```
 
+### Whether on the AWS Instance or locally, clone the repository:
+
+```bash
+# Clone the repo and change directory
+git clone https://github.com/AY2425S1-DSA4262-gene-ius/Genomics-Project.git
+cd Genomics-Project
+```
+
 ### Whether on the AWS Instance or locally, set up package environment:
 
 **MacOS/Linux(AWS Instance)**
 
 ```bash
+# Initialise environment
 python -m venv venv
 source venv/bin/activate
+
+# Install packages
+pip install -r requirements.txt
 ```
 
 **Windows**
 
 ```bash
+# Initialise environment
 python -m venv venv
 venv/Scripts/activate
+
+# Install packages
+pip install -r requirements.txt
 ```
 
 ### Whether on the AWS Instance or locally, run this for predictions:
 
 ```Bash
-# Clone the repo and change directory
-git clone https://github.com/AY2425S1-DSA4262-gene-ius/Genomics-Project.git
-cd Genomics-Project
-
-# Install packages
-pip install -r requirements.txt
-
 # Run the prediction
 python -m make_predictions --data_file_path data/sample_data.json.gz --model_path models/Histogram-based_Gradient_Boosting.joblib --standard_scaler_path artifacts/standard_scaler.joblib --pca_path artifacts/pca.joblib --output_file_name sample_data_predictions.csv
 
@@ -82,7 +91,7 @@ Our workflow requires **Python 3.9** or later. Please ensure your Python version
 When initialising your instance, kindly stick to `EBSVolumeSize` of at least `100` and `InstanceType` of at least `t3.medium`.
 
 > [!IMPORTANT]
-> The instance unfortunately comes with **Python 3.8.10**. As such, please execute the commands below sequentially to upgrade it to **Python 3.9**:
+> The instance unfortunately comes with **Python 3.8.10**. As such, please execute the commands below sequentially to upgrade it to **Python 3.9**, as well as download the associated `pip` for package installation:
 
 ```bash
 # Install Python 3.9
@@ -90,11 +99,18 @@ sudo apt install python3.9
 
 # Point `python` symlink to the installed Python 3.9 (Do not miss out the `1` at the end)
 sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.9 1
+
+# Download `distutil` and `pip`
+sudo apt install python3.9-distutils
+curl https://bootstrap.pypa.io/get-pip.py | sudo python3.9
+
+# Set up `pip` symlink to point to Python 3.9's `pip` (Do not miss out the `1` at the end)
+sudo update-alternatives --install /usr/bin/pip pip /usr/local/bin/pip3.9 1
 ```
 
 **Local Machine:**
 
-Ensure that you have downloaded **Python 3.9** or later in your machine.
+Ensure that you have downloaded **Python 3.9** or later in your machine. `pip` should be included automatically.
 
 ## Set Up Repository
 
@@ -111,27 +127,6 @@ cd Genomics-Project
 ```
 
 ## Package Installation
-
-### Installing `pip`
-
-`pip` is a package installer for python. We will utilise it for any package dependencies in the project.
-
-**AWS Instance:**
-
-Unfortunately, `pip` does not come with the instance. Execute the commands below sequentially:
-
-```bash
-# Download `distutil` and `pip`
-sudo apt install python3.9-distutils
-curl https://bootstrap.pypa.io/get-pip.py | sudo python3.9
-
-# Set up `pip` symlink to point to Python 3.9's `pip` (Do not miss out the `1` at the end)
-sudo update-alternatives --install /usr/bin/pip pip /usr/local/bin/pip3.9 1
-```
-
-**Local Machine:**
-
-If Python is already installed, `pip` should be included automatically.
 
 ### Setup Local Environment
 
