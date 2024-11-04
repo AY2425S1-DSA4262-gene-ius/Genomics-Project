@@ -1,5 +1,6 @@
+wandb
 __pycache__
+powernet_env
 venv
 .ruff_cache
-wandb
 predictions
