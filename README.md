@@ -1,6 +1,6 @@
 # DSA4262 Genomics Project: Prediction of m6A RNA modifications from direct RNA-Seq data
 
-This repository contains the code for the DSA4262 Genomics Project by Team gene-ius. The pipeline supports data preparation, feature engineering, model training, and evaluation, which can be run as standalone modules or sequentially through curated scripts. More details are provided below.
+This repository contains the code for the DSA4262 Genomics Project by Team gene-ius. The pipeline supports data preparation, feature engineering, model training, and evaluation, which can be run as standalone modules or sequentially through curated scripts. Our pipeline current supports the training of **Histogram-based Gradient Boosting Classifier**, as we achieved the best performance with that model. More details are provided below.
 
 > [!TIP]
 >
@@ -174,6 +174,10 @@ You’re now set to run training and make predictions using our pipeline.
 ### Data Prerequisites
 
 Before running the full training process, ensure that you have both the `.json.gz` file and the associated `.labelled` file that you intend to use for training of the model.
+
+### Model
+
+Our pipeline is currently configured to train with **Histogram-based Gradient Boosting Classifier** using our curated parameters. If you wish to use a different model, kindly swap out the model in `m6a_modifications/modelling.py`.
 
 ### Run Training Pipeline
 
