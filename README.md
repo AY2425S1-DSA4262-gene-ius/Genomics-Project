@@ -19,6 +19,8 @@ Our pipeline currently supports the training of **Histogram-based Gradient Boost
     </ol>
 </details>
 
+## Summary of Commands (to get output)
+
 > [!TIP]
 >
 > **👋 Hello Student Evaluators!**
@@ -32,8 +34,6 @@ Our pipeline currently supports the training of **Histogram-based Gradient Boost
 > If you're running locally, make sure you have **Python version 3.9 or later**.
 >
 > The output file will then be generated in `predictions/sample_data_predictions.csv`
-
-## Summary of Commands (to get output)
 
 ### If you're using AWS Instance, set up Python 3.9 and pip:
 
