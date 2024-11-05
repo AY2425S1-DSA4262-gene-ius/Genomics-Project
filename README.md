@@ -1,6 +1,8 @@
 # DSA4262 Genomics Project: Prediction of m6A RNA modifications from direct RNA-Seq data
 
-This repository contains the code for the DSA4262 Genomics Project by Team gene-ius. The pipeline supports data preparation, feature engineering, model training, and evaluation, which can be run as standalone modules or sequentially through curated scripts. Our pipeline current supports the training of **Histogram-based Gradient Boosting Classifier**, as we achieved the best performance with that model. More details are provided below.
+This repository contains the code for the DSA4262 Genomics Project by Team gene-ius. The pipeline supports data preparation, feature engineering, model training, and evaluation, which can be run as standalone modules or sequentially through curated scripts. All of the scripts are located under `m6a_modifications` folder.
+
+Our pipeline current supports the training of **Histogram-based Gradient Boosting Classifier**, as we achieved the best performance with that model. More details are provided below.
 
 > [!TIP]
 >
@@ -251,7 +253,7 @@ The flags for the command that executes the prediction pipeline are as follows:
 | `--pca_path` | `str` | Path to the fitted PCA artifact. | None |
 | `--output_file_name` | `str` | Filename for the output. | None |
 
-### Running Individual Components
+## Running Individual Components
 
 If you are interested in executing the individual components of **data preparation**, **feature engineering**, **model training**, and **evaluation**, you may refer to the sample commands below. Else, head to `m6a_modifications` folder and refer to the the various component scripts for more information.
 
@@ -270,6 +272,10 @@ python -m m6a_modifications.modelling --x_train_data_path processed_data/X_train
 # Evaluation
 python -m m6a_modifications.evaluation --model_file_path models/Histogram-based_Gradient_Boosting.joblib --data_path processed_data/X_test.csv --data_identity_path processed_data/X_test_identity.csv --labels_path processed_data/y_test.csv
 ```
+
+## CNN and PowerNet
+
+Apart from our training/prediction scripts in the `m6a_modifications` folder, we have also uploaded our implementation of CNN and PowerNet in the `m6a_cnn` and `m6a_powernet` folders respectively. While we did not curate a documentation for them for the sake of brevity, feel free to explore and experiment with them.
 
 ## Licence
 
