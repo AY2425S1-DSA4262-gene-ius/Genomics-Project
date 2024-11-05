@@ -2,7 +2,7 @@
 
 This repository contains the code for the DSA4262 Genomics Project by Team gene-ius. The pipeline supports data preparation, feature engineering, model training, and evaluation, which can be run as standalone modules or sequentially through curated scripts. All of the pipeline components are located under the `m6a_modifications` folder.
 
-Our pipeline current supports the training of **Histogram-based Gradient Boosting Classifier**, as we achieved the best performance with that model. More details are provided below.
+Our pipeline currently supports the training of **Histogram-based Gradient Boosting Classifier**, as we achieved the best performance with that model. More details are provided below.
 
 > [!TIP]
 >
