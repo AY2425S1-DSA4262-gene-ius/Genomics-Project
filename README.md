@@ -4,7 +4,7 @@ This repository contains the code for the DSA4262 Genomics Project by Team gene-
 
 Our pipeline currently supports the training of **Histogram-based Gradient Boosting Classifier**, as we achieved the best performance with that model. More details are provided below.
 
-<details>
+<details open>
     <summary>Table of Contents</summary>
     <ol>
         <li><a href="#summary-of-commands-to-get-output">Summary of Commands (to get output)</a></li>
