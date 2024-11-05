@@ -4,6 +4,21 @@ This repository contains the code for the DSA4262 Genomics Project by Team gene-
 
 Our pipeline currently supports the training of **Histogram-based Gradient Boosting Classifier**, as we achieved the best performance with that model. More details are provided below.
 
+<details>
+    <summary>Table of Contents</summary>
+    <ol>
+        <li><a href="#summary-of-commands-to-get-output">Summary of Commands (to get output)</a></li>
+        <li><a href="#system-requirements">System Requirements</a></li>
+        <li><a href="#set-up-repository">Set Up Repository</a></li>
+        <li><a href="#package-installation">Package Installation</a></li>
+        <li><a href="#model-training-pipeline">Model Training Pipeline</a></li>
+        <li><a href="#prediction-pipeline">Prediction Pipeline</a></li>
+        <li><a href="#running-individual-components">Running Individual Components</a></li>
+        <li><a href="#cnn-and-powernet">CNN and PowerNet</a></li>
+        <li><a href="#license">License</a></li>
+    </ol>
+</details>
+
 > [!TIP]
 >
 > **👋 Hello Student Evaluators!**
@@ -277,6 +292,6 @@ python -m m6a_modifications.evaluation --model_file_path models/Histogram-based_
 
 Apart from our training/prediction components in the `m6a_modifications` folder, we have also uploaded our implementation of CNN and PowerNet in the `m6a_cnn` and `m6a_powernet` folders respectively. While we did not curate a documentation for them for the sake of brevity, feel free to explore and experiment with them.
 
-## Licence
+## License
 
 This project is licensed under the MIT License. See the [LICENSE](https://github.com/AY2425S1-DSA4262-gene-ius/Genomics-Project/blob/main/LICENSE) file for more details.
