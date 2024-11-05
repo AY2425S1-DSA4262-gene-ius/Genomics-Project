@@ -1,6 +1,6 @@
 # DSA4262 Genomics Project: Prediction of m6A RNA modifications from direct RNA-Seq data
 
-This repository contains the code for the DSA4262 Genomics Project by Team gene-ius. The pipeline supports data preparation, feature engineering, model training, and evaluation, which can be run as standalone modules or sequentially through curated scripts. All of the scripts are located under `m6a_modifications` folder.
+This repository contains the code for the DSA4262 Genomics Project by Team gene-ius. The pipeline supports data preparation, feature engineering, model training, and evaluation, which can be run as standalone modules or sequentially through curated scripts. All of the pipeline components are located under the `m6a_modifications` folder.
 
 Our pipeline current supports the training of **Histogram-based Gradient Boosting Classifier**, as we achieved the best performance with that model. More details are provided below.
 
@@ -275,7 +275,7 @@ python -m m6a_modifications.evaluation --model_file_path models/Histogram-based_
 
 ## CNN and PowerNet
 
-Apart from our training/prediction scripts in the `m6a_modifications` folder, we have also uploaded our implementation of CNN and PowerNet in the `m6a_cnn` and `m6a_powernet` folders respectively. While we did not curate a documentation for them for the sake of brevity, feel free to explore and experiment with them.
+Apart from our training/prediction components in the `m6a_modifications` folder, we have also uploaded our implementation of CNN and PowerNet in the `m6a_cnn` and `m6a_powernet` folders respectively. While we did not curate a documentation for them for the sake of brevity, feel free to explore and experiment with them.
 
 ## Licence
 
